@@ -21,7 +21,9 @@ cd Stage2
 rem Search for Quartus installation in default directory
 for /d %%D in (C:\intelFPGA_lite\*) do (
     if exist "%%D\quartus\bin64\quartus_sh.exe" (
-        set "QUARTUS_ROOTDIR=%%D"
+        setx QUARTUS_ROOTDIR "%%D"
+        echo %QUARTUS_ROOTDIR%
+        setx PATH "%QUARTUS_ROOTDIR%\quartus\bin64;%QUARTUS_ROOTDIR%\quartus;%PATH%"
         break;
     )
 )
@@ -30,6 +32,7 @@ for /d %%D in (C:\intelFPGA_lite\*) do (
 
 rem Search for Quartus directory if its not defualt
 if not defined QUARTUS_ROOTDIR (
+    echo from my my see ROOTDIR IS NOT DEFINED
 	set "QUARTUS_DIR="
 	for /r "C:\" %%I in ("quartus_sh.exe") do set "QUARTUS_DIR=%%~dpI.."
 
@@ -38,7 +41,7 @@ if not defined QUARTUS_ROOTDIR (
 	) else (
     	rem Set environment variables
     	setx QUARTUS_ROOTDIR "%QUARTUS_DIR%"
-    	setx PATH "%QUARTUS_DIR%\quartus\bin64;%PATH%"
+    	setx PATH "%QUARTUS_ROOTDIR%\quartus\bin64;%QUARTUS_ROOTDIR%\quartus;%PATH%"
     	echo Quartus directory set to %QUARTUS_DIR%
 	)
 )
